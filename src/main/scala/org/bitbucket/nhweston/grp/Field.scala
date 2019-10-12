@@ -24,13 +24,13 @@ object Field {
 
     implicit def mkOps[T: Field] (self: T) : Ops[T] = new Ops (self)
 
-    def mkAddGrp[T] (self: T) (implicit field: Field[T]) : Grp[T] = new Grp[T] {
+    def mkAddGrp[T] (implicit field: Field[T]) : Grp[T] = new Grp[T] {
         override def append (x: T, y: T) : T = x + y
         override def invert (x: T) : T = -x
         override def zero: T = field.zero
     }
 
-    def mkMulGrp[T] (self: T) (implicit field: Field[T]) : Grp[T] = new Grp[T] {
+    def mkMulGrp[T] (implicit field: Field[T]) : Grp[T] = new Grp[T] {
         override def append (x: T, y: T) : T = x * y
         override def invert (x: T): T = ~x
         override def zero: T = field.one
