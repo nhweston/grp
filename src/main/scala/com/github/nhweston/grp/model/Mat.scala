@@ -3,7 +3,7 @@ package com.github.nhweston.grp.model
 import com.github.nhweston.grp.Field
 import com.github.nhweston.grp.Field._
 
-class Mat[Y <: Int, X <: Int, T] private (val elems: Seq[T]) (implicit y: ValueOf[Y], x: ValueOf[X]) {
+class Mat[Y <: Int, X <: Int, T] private (val elems: Vector[T]) (implicit y: ValueOf[Y], x: ValueOf[X]) {
 
     def dimY: Y = y.value
     def dimX: X = x.value
@@ -59,6 +59,15 @@ class Mat[Y <: Int, X <: Int, T] private (val elems: Seq[T]) (implicit y: ValueO
         builder.result ()
     }
 
+    override def equals (o: Any) : Boolean = {
+        o match {
+            case other: Mat[Y, X, T] => (this.elems zip other.elems) .forall {case (a, b) => a == b}
+            case _ => false
+        }
+    }
+
+    override def hashCode: Int = elems.hashCode
+
 }
 
 object Mat {
@@ -70,7 +79,7 @@ object Mat {
         val dimX = x.value
         if (dimY <= 0 || dimX <= 0) error ("`dimY` and `dimX` must be strictly positive")
         if (elems.size != dimY * dimX) error (s"Expected ${dimY * dimX} elements, found ${elems.size}")
-        new Mat[Y, X, T] (elems.toSeq)
+        new Mat[Y, X, T] (elems.toVector)
     }
 
     implicit def mkField[D <: Int, T] (implicit d: ValueOf[D], field: Field[T]) : Field[Mat[D, D, T]] = {
@@ -81,23 +90,23 @@ object Mat {
         new Field[Self] {
             override def plus (x: Self, y: Self) : Self = new Mat ((x.elems zip y.elems) .map {case (a, b) => a + b})
             override def times (x: Self, y: Self) : Self = new Mat (
-                (0 until dim) .map { idx =>
+                (0 until size) .map { idx =>
                     val (j, i) = toCoords (idx)
                     (0 until dim) .foldLeft (field.zero) {
                         case (partial, k) => partial + x (j, k) * y (k, i)
                     }
-                }
+                } .toVector
             )
             override def negate (x: Self) : Self = new Mat (x.elems.map (-_))
             override def invert (x: Self): Self = ???
-            override lazy val zero: Self = new Mat (Seq.fill (size) (field.zero))
+            override lazy val zero: Self = new Mat (Vector.fill (size) (field.zero))
             override lazy val one: Self = new Mat (
-                (0 until dim) .map {
+                (0 until size) .map {
                     toCoords (_) match {
                         case (j, i) if (j == i) => field.one
                         case _ => field.zero
                     }
-                }
+                } .toVector
             )
         }
     }

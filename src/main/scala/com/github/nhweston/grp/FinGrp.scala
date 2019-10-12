@@ -2,18 +2,16 @@ package com.github.nhweston.grp
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
-import scala.collection.mutable
 
 trait FinGrp[T] extends Grp[T] {
 
     def set: Set[T]
     def op: (T, T) => T
-    implicit def ord: Ordering[T]
 
     override def append (x: T, y: T) : T = table ((x, y))
     override def invert (x: T) : T = inverses (x)
 
-    lazy val seq: Seq[T] = (mutable.PriorityQueue from set) .toSeq
+    private lazy val seq: Seq[T] = set.toSeq
 
     lazy val table: Map[(T, T), T] = {
         val builder = Map.newBuilder[(T, T), T]
@@ -43,13 +41,8 @@ trait FinGrp[T] extends Grp[T] {
 
 object FinGrp {
 
-    def generate[T] (
-        iden: T,
-        gtors: Set[T],
-        op: (T, T) => T
-    ) (implicit ord: Ordering[T]) : FinGrp[T] = {
+    def generate[T] (iden: T, gtors: Set[T], op: (T, T) => T) : FinGrp[T] = {
         val op0 = op
-        val ord0 = ord
         new FinGrp[T] {
             override def set: Set[T] = {
                 @tailrec
@@ -64,7 +57,6 @@ object FinGrp {
                 aux (Set.empty, Queue (iden))
             }
             override def op: (T, T) => T = op0
-            override implicit def ord: Ordering[T] = ord0
         }
     }
 
