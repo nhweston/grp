@@ -4,7 +4,11 @@ import com.github.nhweston.grp.{Field, Grp}
 
 import scala.annotation.tailrec
 
-class Mod[M <: Int] private (val n: Int) extends AnyVal
+class Mod[M <: Int] private (val n: Int) extends AnyVal {
+
+    override def toString: String = n.toString
+
+}
 
 object Mod {
 

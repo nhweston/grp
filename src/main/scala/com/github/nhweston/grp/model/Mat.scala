@@ -45,6 +45,20 @@ class Mat[Y <: Int, X <: Int, T] private (val elems: Seq[T]) (implicit y: ValueO
         }
     }
 
+    override lazy val toString: String = {
+        val strings = elems.map (_.toString)
+        val widths = (0 until dimX) .map (i => (0 until dimY) .map (j => (strings (toIndex (j, i)) .length)) .max)
+        val padded = elems.zipWithIndex.map {
+            case (str, idx) => s"%${widths (toCoords (idx) ._1) + 1}s" .format (str)
+        }
+        val builder = new StringBuilder ()
+        for (j <- 0 until dimY) {
+            builder += '\n'
+            for (i <- 0 until dimX) builder ++= padded (toIndex (j, i))
+        }
+        builder.result ()
+    }
+
 }
 
 object Mat {
