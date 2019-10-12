@@ -1,4 +1,4 @@
-package org.bitbucket.nhweston.grp
+package com.github.nhweston.grp
 
 trait Field[T] {
 
@@ -12,6 +12,8 @@ trait Field[T] {
 }
 
 object Field {
+
+    import language.implicitConversions
 
     class Ops[T] (self: T) (implicit field: Field[T]) {
         def unary_- : T = field.negate (self)

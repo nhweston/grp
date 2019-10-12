@@ -1,5 +1,12 @@
-name := "grp"
+ThisBuild/organization := "com.github.nhweston"
+ThisBuild/scalaVersion := "2.13.1"
+ThisBuild/scalacOptions := Seq (
+    "-deprecation",
+    "-feature",
+    "-unchecked"
+)
 
-version := "0.1"
-
-scalaVersion := "2.13.1"
+lazy val root = (project in file (".")) .settings (
+    name := "grp",
+    libraryDependencies ++= Seq ()
+)

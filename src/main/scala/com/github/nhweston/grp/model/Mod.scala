@@ -1,6 +1,6 @@
-package org.bitbucket.nhweston.grp.model
+package com.github.nhweston.grp.model
 
-import org.bitbucket.nhweston.grp.{Field, Grp}
+import com.github.nhweston.grp.{Field, Grp}
 
 import scala.annotation.tailrec
 

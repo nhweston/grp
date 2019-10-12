@@ -1,4 +1,4 @@
-package org.bitbucket.nhweston.grp
+package com.github.nhweston.grp
 
 import scala.annotation.tailrec
 
@@ -31,6 +31,8 @@ trait Grp[T] {
 }
 
 object Grp {
+
+    import language.implicitConversions
 
     class Ops[T] (self: T) (implicit grp: Grp[T]) {
         def unary_- : T = grp.invert (self)

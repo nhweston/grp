@@ -1,4 +1,4 @@
-package org.bitbucket.nhweston.grp
+package com.github.nhweston.grp
 
 import scala.annotation.tailrec
 import scala.collection.immutable.Queue
