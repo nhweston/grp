@@ -1,7 +1,8 @@
 package com.github.nhweston.grp
 
 import scala.annotation.tailrec
-import scala.collection.immutable.Queue
+import scala.collection.immutable.{Queue, SortedMap}
+import scala.collection.mutable
 
 trait FinGrp[T] extends Grp[T] {
 
@@ -10,6 +11,7 @@ trait FinGrp[T] extends Grp[T] {
 
     override def append (x: T, y: T) : T = table ((x, y))
     override def invert (x: T) : T = inverses (x)
+    override def order (x: T) : Int = orders (x)
 
     private lazy val seq: Seq[T] = set.toSeq
 
@@ -35,6 +37,23 @@ trait FinGrp[T] extends Grp[T] {
             }
         }
         builder.result ()
+    }
+
+    lazy val orders: Map[T, Int] = {
+        val builder = Map.newBuilder[T, Int]
+        for (a <- seq) builder += (a -> super.order (a))
+        builder.result ()
+    }
+
+    lazy val orderProfile: SortedMap[Int, Int] = {
+        val mmap = mutable.Map.empty[Int, Int]
+        for ((_, o) <- orders) {
+            mmap.updateWith (o) {
+                case Some (n) => Some (n + 1)
+                case None => Some (1)
+            }
+        }
+        SortedMap from mmap
     }
 
 }

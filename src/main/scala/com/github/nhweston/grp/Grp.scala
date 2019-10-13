@@ -1,6 +1,7 @@
 package com.github.nhweston.grp
 
 import scala.annotation.tailrec
+import scala.collection.immutable.SortedMap
 
 trait Grp[T] {
 
@@ -27,6 +28,9 @@ trait Grp[T] {
         }
         aux (x, 1)
     }
+
+    def generate (gtors: Set[T]) : FinGrp[T] = FinGrp.generate (zero, gtors, append)
+    def generate (gtors: T*) : FinGrp[T] = generate (gtors.toSet)
 
 }
 

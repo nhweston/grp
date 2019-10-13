@@ -10,16 +10,16 @@ class Perm[M <: Int] private (private val f: Vector[Int]) (implicit m: ValueOf[M
 
     def cycles: Seq[Seq[Int]] = {
         @tailrec
-        def buildCycle (n: Int, cycle: Seq[Int] = Seq.empty) : Seq[Int] = {
-            if (cycle.headOption contains n) cycle
-            else buildCycle (f (n), cycle :+ n)
+        def buildCycle (head: Int, n: Int, cycle: Seq[Int] = Seq.empty) : Seq[Int] = {
+            if (head == n) head +: cycle
+            else buildCycle (head, f (n), n +: cycle)
         }
         @tailrec
         def aux (n: Int, result: Seq[Seq[Int]], included: Set[Int]) : Seq[Seq[Int]] = {
             if (included contains n) aux (n + 1, result, included)
             else if (n >= m.value) result
             else {
-                val cycle = buildCycle (n)
+                val cycle = buildCycle (n, f (n))
                 if (cycle.size < 2) aux (n + 1, result, included)
                 else aux (n + 1, result :+ cycle, included ++ cycle)
             }
@@ -54,7 +54,7 @@ object Perm {
     def cyc[M <: Int] (cycle: Int*) (implicit m: ValueOf[M]) : Perm[M] = {
         (cycle.map (math.floorMod (_, m.value))) match {
             case cycle @ (head +: tail) =>
-                val fMap = (cycle zip (tail :+ head)) .toMap
+                val fMap = ((tail :+ head) zip cycle) .toMap
                 new Perm ((0 until m.value) .map (n => fMap.getOrElse (n, n)) .toVector)
             case Nil => new Perm ((0 until m.value) .toVector)
         }
