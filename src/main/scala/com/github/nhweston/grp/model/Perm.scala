@@ -27,7 +27,12 @@ class Perm[M <: Int] private (private val f: Vector[Int]) (implicit m: ValueOf[M
         aux (0, Seq.empty, Set.empty)
     }
 
-    override def toString: String = cycles.map (cycle => cycle.mkString ("(", " ", ")")) .mkString (" ")
+    override def toString: String = {
+        cycles match {
+            case Nil => "()"
+            case cycles => cycles.map (cycle => cycle.mkString ("(", " ", ")")) .mkString (" ")
+        }
+    }
 
     override def equals (o: Any) : Boolean = {
         o match {
@@ -42,11 +47,15 @@ class Perm[M <: Int] private (private val f: Vector[Int]) (implicit m: ValueOf[M
 
 object Perm {
 
+    def zero[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm[M] ((0 until m.value) .toVector)
+    def sigma[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm ((1 to m.value) .toVector)
+    def tau[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm (Vector (1, 0) ++ (2 until m.value))
+
     def cyc[M <: Int] (cycle: Int*) (implicit m: ValueOf[M]) : Perm[M] = {
         (cycle.map (math.floorMod (_, m.value))) match {
             case cycle @ (head +: tail) =>
                 val fMap = (cycle zip (tail :+ head)) .toMap
-                new Perm ((0 until m.value) .map (n => fMap.getOrElse (n, 0)) .toVector)
+                new Perm ((0 until m.value) .map (n => fMap.getOrElse (n, n)) .toVector)
             case Nil => new Perm ((0 until m.value) .toVector)
         }
     }

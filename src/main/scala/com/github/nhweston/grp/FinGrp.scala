@@ -15,7 +15,7 @@ trait FinGrp[T] extends Grp[T] {
 
     lazy val table: Map[(T, T), T] = {
         val builder = Map.newBuilder[(T, T), T]
-        for ((a, b) <- seq zip seq) builder += ((a, b) -> op (a, b))
+        for (a <- seq; b <- seq) builder += ((a, b) -> op (a, b))
         builder.result ()
     }
 

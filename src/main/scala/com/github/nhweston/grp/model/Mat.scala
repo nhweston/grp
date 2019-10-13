@@ -1,6 +1,6 @@
 package com.github.nhweston.grp.model
 
-import com.github.nhweston.grp.Field
+import com.github.nhweston.grp.{Field, Grp}
 import com.github.nhweston.grp.Field._
 
 class Mat[Y <: Int, X <: Int, T] private (val elems: Vector[T]) (implicit y: ValueOf[Y], x: ValueOf[X]) {
@@ -109,6 +109,10 @@ object Mat {
                 } .toVector
             )
         }
+    }
+
+    implicit def mkGrp[D <: Int, T] (implicit d: ValueOf[D], field: Field[T]) : Grp[Mat[D, D, T]] = {
+        Field.mkMulGrp (mkField)
     }
 
 }
