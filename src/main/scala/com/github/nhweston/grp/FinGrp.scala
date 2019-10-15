@@ -56,26 +56,60 @@ trait FinGrp[T] extends Grp[T] {
         SortedMap from mmap
     }
 
+    def findGtors: Set[T] = {
+        @tailrec
+        def gen (
+            gtor: T,
+            set: Set[T],
+            q: Queue[T]
+        ) : Set[T] = {
+            println (q)
+            q match {
+                case head +: tail =>
+                    if (set contains head) gen (gtor, set, tail)
+                    else gen (gtor, set + head, q :+ op (head, gtor))
+                case Queue () => set
+            }
+        }
+        @tailrec
+        def aux (
+            gted: Set[T],
+            ungted: Set[T],
+            result: Set[T]
+        ) : Set[T] = {
+            if (ungted.isEmpty) result
+            else {
+                val gtor = ungted.maxBy (order)
+                val next = gen (gtor, Set.empty, Queue from gted)
+                aux (next, ungted -- next, result + gtor)
+            }
+        }
+        aux (Set (zero), set - zero, Set.empty)
+    }
+
 }
 
 object FinGrp {
 
-    def generate[T] (iden: T, gtors: Set[T], op: (T, T) => T) : FinGrp[T] = {
-        val op0 = op
-        new FinGrp[T] {
-            override def set: Set[T] = {
-                @tailrec
-                def aux (set: Set[T], q: Queue[T]) : Set[T] = {
-                    q match {
-                        case head +: tail =>
-                            if (set contains head) aux (set, tail)
-                            else aux (set + head, tail :++ gtors.map (op (head, _)))
-                        case Queue () => set
-                    }
-                }
-                aux (Set.empty, Queue (iden))
+    def gen[T] (zero: T, gtors: Set[T], op: (T, T) => T) : Set[T] = {
+        @tailrec
+        def aux (set: Set[T], q: Queue[T]) : Set[T] = {
+            q match {
+                case head +: tail =>
+                    if (set contains head) aux (set, tail)
+                    else aux (set + head, tail :++ gtors.map (op (head, _)))
+                case Queue () => set
             }
-            override def op: (T, T) => T = op0
+        }
+        aux (Set.empty, Queue (zero))
+    }
+
+    def genToGrp[T] (zero: T, gtors: Set[T], op: (T, T) => T) : FinGrp[T] = {
+        val _zero = zero
+        val _op = op
+        new FinGrp[T] {
+            override lazy val set: Set[T] = gen (_zero, gtors, _op)
+            override lazy val op: (T, T) => T = _op
         }
     }
 

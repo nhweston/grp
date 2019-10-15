@@ -48,7 +48,7 @@ class Perm[M <: Int] private (private val f: Vector[Int]) (implicit m: ValueOf[M
 object Perm {
 
     def zero[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm[M] ((0 until m.value) .toVector)
-    def sigma[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm ((1 to m.value) .toVector)
+    def sigma[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm ((1 until m.value) .toVector :+ 0)
     def tau[M <: Int] (implicit m: ValueOf[M]) : Perm[M] = new Perm (Vector (1, 0) ++ (2 until m.value))
 
     def cyc[M <: Int] (cycle: Int*) (implicit m: ValueOf[M]) : Perm[M] = {
