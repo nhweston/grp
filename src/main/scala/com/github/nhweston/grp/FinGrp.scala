@@ -63,7 +63,6 @@ trait FinGrp[T] extends Grp[T] {
             set: Set[T],
             q: Queue[T]
         ) : Set[T] = {
-            println (q)
             q match {
                 case head +: tail =>
                     if (set contains head) gen (gtor, set, tail)

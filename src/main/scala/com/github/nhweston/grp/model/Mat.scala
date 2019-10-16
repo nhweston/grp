@@ -45,7 +45,7 @@ class Mat[Y <: Int, X <: Int, T] private (val elems: Vector[T]) (implicit y: Val
         }
     }
 
-    override lazy val toString: String = {
+    lazy val pprint: String = {
         val strings = elems.map (_.toString)
         val widths = (0 until dimX) .map (i => (0 until dimY) .map (j => (strings (toIndex (j, i)) .length)) .max)
         val padded = elems.zipWithIndex.map {
@@ -57,6 +57,10 @@ class Mat[Y <: Int, X <: Int, T] private (val elems: Vector[T]) (implicit y: Val
             for (i <- 0 until dimX) builder ++= padded (toIndex (j, i))
         }
         builder.result ()
+    }
+
+    override lazy val toString: String = {
+        (for (i <- 0 until dimY) yield row (i) .mkString ("[", ", ", "]")) .mkString ("[", ", ", "]")
     }
 
     override def equals (o: Any) : Boolean = {

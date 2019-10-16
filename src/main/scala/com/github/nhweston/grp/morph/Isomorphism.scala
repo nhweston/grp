@@ -22,7 +22,6 @@ case class Isomorphism[G, H] (
                     def aux (candidates: Seq[H]) : Option[Partial] = {
                         candidates match {
                             case candidate +: candidatesNext =>
-                                println (candidate)
                                 Partial (tableH, gtorsH :+ candidate) .regenerate match {
                                     case result @ Some (_) => search (result)
                                     case None => aux (candidatesNext)
