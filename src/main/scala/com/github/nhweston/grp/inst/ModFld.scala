@@ -1,26 +1,13 @@
-package com.github.nhweston.grp.model
+package com.github.nhweston.grp.inst
 
-import com.github.nhweston.grp.{Field, Grp}
+import com.github.nhweston.grp.Fld
+import com.github.nhweston.grp.data.Mod
 
 import scala.annotation.tailrec
 
-class Mod[M <: Int] private (val n: Int) extends AnyVal {
+object ModFld {
 
-    override def toString: String = n.toString
-
-}
-
-object Mod {
-
-    def apply[M <: Int] (n: Int) (implicit m: ValueOf[M]) = new Mod[M] (math.floorMod (n, m.value))
-
-    implicit def mkModGrp[M <: Int] (implicit m: ValueOf[M]) : Grp[Mod[M]] = new Grp[Mod[M]] {
-        override def append (x: Mod[M], y: Mod[M]) : Mod[M] = Mod (x.n + y.n)
-        override def invert (x: Mod[M]) : Mod[M] = Mod (-x.n)
-        override def zero: Mod[M] = Mod (0)
-    }
-
-    implicit def mkModField[M <: Int] (implicit m: ValueOf[M]) : Field[Mod[M]] = new Field[Mod[M]] {
+    implicit def mkModFld[M <: Int] (implicit m: ValueOf[M]) : Fld[Mod[M]] = new Fld[Mod[M]] {
         override def plus (x: Mod[M], y: Mod[M]) : Mod[M] = Mod (x.n + y.n)
         override def times (x: Mod[M], y: Mod[M]) : Mod[M] = Mod (x.n * y.n)
         override def negate (x: Mod[M]) : Mod[M] = Mod (-x.n)

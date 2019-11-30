@@ -26,9 +26,9 @@ C(0,1,2,3,4,5,6) * 3
 - (C(1,2,3) + C(4,5))
 
 // The orders of elements:
-G.order (C(0,1,2,3,4,5,6))
-G.order (C(0,1,2))
-G.order (C(0,1,2) + C(3,4))
+G.abs (C(0,1,2,3,4,5,6))
+G.abs (C(0,1,2))
+G.abs (C(0,1,2) + C(3,4))
 
 // All elements of a symmetry group can be generated from a simple transposition and a full cycle. We'll generate S6
 // here since S7 is a little too computationally expensive:

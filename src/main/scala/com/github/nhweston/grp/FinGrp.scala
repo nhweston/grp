@@ -9,9 +9,9 @@ trait FinGrp[T] extends Grp[T] {
     def set: Set[T]
     def op: (T, T) => T
 
-    override def append (x: T, y: T) : T = table ((x, y))
-    override def invert (x: T) : T = inverses (x)
-    override def order (x: T) : Int = orders (x)
+    override def plus (x: T, y: T) : T = table ((x, y))
+    override def negate (x: T) : T = inverses (x)
+    override def abs (x: T) : Int = orders (x)
 
     private lazy val seq: Seq[T] = set.toSeq
 
@@ -41,7 +41,7 @@ trait FinGrp[T] extends Grp[T] {
 
     lazy val orders: Map[T, Int] = {
         val builder = Map.newBuilder[T, Int]
-        for (a <- seq) builder += (a -> super.order (a))
+        for (a <- seq) builder += (a -> super.abs (a))
         builder.result ()
     }
 
@@ -78,7 +78,7 @@ trait FinGrp[T] extends Grp[T] {
         ) : Set[T] = {
             if (ungted.isEmpty) result
             else {
-                val gtor = ungted.maxBy (order)
+                val gtor = ungted.maxBy (abs)
                 val next = gen (gtor, Set.empty, Queue from gted)
                 aux (next, ungted -- next, result + gtor)
             }

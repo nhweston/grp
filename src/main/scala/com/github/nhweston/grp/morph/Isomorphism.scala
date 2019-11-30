@@ -58,7 +58,7 @@ case class Isomorphism[G, H] (
                         case Some (`xH`) => false
                         case _ => true
                     } =>
-                        val gted = gtors.map {case (gtorG, gtorH) => (G.append (xG, gtorG), H.append (xH, gtorH))}
+                        val gted = gtors.map {case (gtorG, gtorH) => (G.plus (xG, gtorG), H.plus (xH, gtorH))}
                         val next = Partial (partial.tableH.updated (idxsG (xG), Some (xH)), gtorsH)
                         aux (tail ++ gted, Some (next))
                     case _ => None
@@ -74,8 +74,8 @@ case class Isomorphism[G, H] (
                     for (idx <- existing; (gtorG, gtorH) <- gtors) yield {
                         val xG = tableG (idx)
                         val xH = tableH (idx) .get
-                        val nextG = G.append (xG, gtorG)
-                        val nextH = H.append (xH, gtorH)
+                        val nextG = G.plus (xG, gtorG)
+                        val nextH = H.plus (xH, gtorH)
                         nextG -> nextH
                     }
                 },

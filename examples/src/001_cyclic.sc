@@ -31,9 +31,9 @@ val G: Grp[G] = implicitly
 G.zero
 
 // Finding orders of elements:
-G.order (a(1))
-G.order (a(6))
-G.order (a(11))
+G.abs (a(1))
+G.abs (a(6))
+G.abs (a(11))
 
 // We can also generate subgroups:
 val H2 = G.generate (a(3))
