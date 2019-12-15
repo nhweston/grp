@@ -27,6 +27,7 @@ object Fld {
         def unary_~ : T = field.invert (self)
         def * (other: T) : T = field.times (self, other)
         def / (other: T) : T = field.times (self, field.invert (other))
+        def ^ (n: Int) : T = field.pow (self, n)
     }
 
     implicit def mkOps[T: Fld] (self: T) : Ops[T] = new Ops (self)

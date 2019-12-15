@@ -14,9 +14,3 @@ lazy val root = (project in file (".")) .settings (
         "com.chuusai" %% "shapeless" % "2.3.3"
     )
 )
-
-lazy val examples = (project in file ("./examples")) .settings (
-    name := "examples",
-    scalaSource in Compile := baseDirectory.value / "src",
-    libraryDependencies ++= Seq()
-) dependsOn root
