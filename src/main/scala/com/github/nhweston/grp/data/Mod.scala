@@ -7,6 +7,13 @@ final class Mod[M <: Int] private (val n: Int) extends AnyVal {
 
     override def toString: String = n.toString
 
+//    override def equals (o: Any) : Boolean = {
+//        o match {
+//            case other: Mod[M] => this.value == other.value
+//            case _ => false
+//        }
+//    }
+
 }
 
 object Mod {

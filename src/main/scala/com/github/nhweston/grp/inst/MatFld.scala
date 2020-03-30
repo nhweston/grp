@@ -45,4 +45,29 @@ object MatFld {
         }
     }
 
+    implicit class MatFldOps[D <: Int, T] (self: Mat[D, T]) (implicit fld: Fld[T]) {
+
+        lazy val det: T = {
+            def aux (mat: Seq[Seq[T]]) : T = {
+                mat.size match {
+                    case 0 => fld.zero
+                    case 1 => mat (0) (0)
+                    case n =>
+                        (0 until n) .foldLeft (fld.zero) { (result, idx) =>
+                            val hd +: tl = mat
+                            result + hd (idx) * aux (
+                                tl.map {
+                                    _ splitAt idx match {
+                                        case (pre, _ +: post) => pre ++ post
+                                    }
+                                }
+                            )
+                        }
+                }
+            }
+            aux ((0 until self.dim) .iterator.map (self.row (_) .toSeq) .toSeq)
+        }
+
+    }
+
 }

@@ -56,6 +56,23 @@ trait FinGrp[T] extends Grp[T] {
         SortedMap from mmap
     }
 
+    lazy val conjugacyClasses: Seq[Set[T]] = {
+        def from (a: T) : Set[T] = for (b <- set) yield plus (plus (negate (b), a), b)
+        @tailrec
+        def aux (
+            result: Seq[Set[T]],
+            remaining: Set[T]
+        ) : Seq[Set[T]] = {
+            remaining.headOption match {
+                case Some (a) =>
+                    val next = from (a)
+                    aux (result :+ next, remaining -- next)
+                case None => result
+            }
+        }
+        aux (Seq (Set (zero)), set - zero)
+    }
+
     def findGtors: Set[T] = {
         @tailrec
         def gen (
@@ -95,8 +112,9 @@ object FinGrp {
         def aux (set: Set[T], q: Queue[T]) : Set[T] = {
             q match {
                 case head +: tail =>
-                    if (set contains head) aux (set, tail)
-                    else aux (set + head, tail :++ gtors.map (op (head, _)))
+                    val setNext = set + head
+                    val qNext = tail ++ gtors.map (op (head, _)) .filterNot (setNext)
+                    aux (setNext, qNext)
                 case Queue () => set
             }
         }

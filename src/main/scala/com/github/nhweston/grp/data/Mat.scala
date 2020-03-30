@@ -61,7 +61,7 @@ class Mat[D <: Int, T] private (val elems: IndexedSeq[T]) (implicit d: ValueOf[D
         }
     }
 
-    override def hashCode: Int = elems.map (_.hashCode) .toArray.hashCode
+    override def hashCode: Int = elems.map (_.hashCode) .hashCode
 
 }
 
